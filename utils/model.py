@@ -21,6 +21,13 @@ def classify_images(image_files, destination, model_name, labels, operation='cop
     destination = Path(destination)
     data = pd.DataFrame(columns=['image_name', 'label', 'score'])
 
+    #Build a prompt-to-label map
+    prompt_map = {
+        f"a photo of a {label.strip()}": label.strip()
+        for label in labels
+    }
+    prompt_labels = list(prompt_map.keys())  # used as candidate_labels for CLIP
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     detector = pipeline(model=model_name, task="zero-shot-image-classification", device=device)
     print(f"Model loaded  in {str(device).upper()}: {model_name}")
@@ -32,7 +39,10 @@ def classify_images(image_files, destination, model_name, labels, operation='cop
             #print(f"Processing {image}")
             try:
                 result = detector(image, candidate_labels=labels)
-                label = result[0]['label']
+
+                #modifying label logic here
+                best_prompt = result[0]['label']
+                label = prompt_map[best_prompt]
                 # print(f"Label: {label}")
                 score = round(result[0]['score'],2)
                 results.append((image, label, score))
