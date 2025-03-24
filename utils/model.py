@@ -6,6 +6,7 @@ from transformers import pipeline
 
 transformers.logging.set_verbosity_error()
 
+#no longer used, could be used to list hugginface models and let the user pick
 def list_models(task="zero-shot-image-classification"):
     url = "https://huggingface.co/api/models"
     params = {"pipeline_tag": task, "sort": "downloads"}
