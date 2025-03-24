@@ -39,7 +39,7 @@ def classify_images(image_files, destination, model_name, labels, operation='cop
         for image in batch_files:
             #print(f"Processing {image}")
             try:
-                result = detector(image, candidate_labels=labels)
+                result = detector(image, candidate_labels=prompt_labels)
 
                 #modifying label logic here
                 best_prompt = result[0]['label']
